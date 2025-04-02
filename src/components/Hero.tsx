@@ -114,7 +114,23 @@ const Hero = () => {
                 }
               }}
             >
-              <span className="text-gradient font-semibold">Limited spots</span> for the first batch! Work on real industry projects & get hired without traditional job applications.
+              <motion.span
+                className="text-gradient font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 via-purple-400 to-purple-600"
+                animate={{
+                  backgroundPosition: ["0%", "100%", "0%"],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                style={{
+                  backgroundSize: "200% 100%"
+                }}
+              >
+                Limited spots
+              </motion.span>{" "}
+              for the first batch! Work on real industry projects & get hired without traditional job applications.
             </motion.p>
           </motion.div>
 
