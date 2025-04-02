@@ -2,107 +2,196 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 199 89% 48%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 142 76% 36%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 199 89% 48%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
-  }
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  --font-inter: 'Inter', sans-serif;
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
 }
 
+[data-theme='dark'] {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+/* Mobile-first responsive design */
 @layer base {
-  * {
-    @apply border-[hsl(var(--border))];
+  html {
+    @apply scroll-smooth;
+    scroll-behavior: smooth;
   }
+  
   body {
-    @apply bg-background text-foreground;
+    @apply text-base;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl lg:text-3xl font-bold;
   }
 }
 
+/* Custom utility classes */
 @layer components {
-  .glass-light {
-    @apply bg-white/50 backdrop-blur-md border border-white/20;
-  }
-
-  .glass-dark {
-    @apply bg-black/50 backdrop-blur-md border border-white/10;
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8;
   }
 
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r;
+    background-size: 200% 200%;
+    animation: gradient 8s ease infinite;
   }
 
-  /* Light theme gradient */
-  .light .text-gradient {
-    @apply from-blue-500 to-green-500;
-    background-size: 200% auto;
-    animation: shine 3s linear infinite;
+  .font-space-grotesk {
+    font-family: var(--font-space-grotesk);
+  }
+  
+  .font-outfit {
+    font-family: var(--font-outfit);
   }
 
-  /* Dark theme gradient */
-  .dark .text-gradient {
-    @apply from-purple-500 to-pink-500;
-    background-size: 200% auto;
-    animation: shine 3s linear infinite;
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6;
+  }
+
+  .button-primary {
+    @apply px-6 py-2 bg-gradient-to-r from-blue-500 to-green-500 hover:from-green-500 hover:to-blue-500 dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700 text-white font-semibold rounded-lg transform hover:scale-105 transition-all duration-200;
+  }
+
+  .button-secondary {
+    @apply px-6 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-lg transition-colors duration-200;
+  }
+
+  /* Mobile navigation improvements */
+  .mobile-menu {
+    @apply fixed inset-0 z-50 bg-white dark:bg-gray-900 transform transition-transform duration-300 ease-in-out;
+  }
+
+  .mobile-menu.open {
+    @apply translate-x-0;
+  }
+
+  .mobile-menu.closed {
+    @apply translate-x-full;
   }
 }
 
-/* Light theme background */
-.light body {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e8fff3 100%);
-  background-attachment: fixed;
+/* Responsive spacing utilities */
+@layer utilities {
+  .section-spacing {
+    @apply py-8 md:py-12 lg:py-16;
+  }
+
+  .content-spacing {
+    @apply space-y-4 md:space-y-6 lg:space-y-8;
+  }
+
+  .flex-responsive {
+    @apply flex flex-col md:flex-row;
+  }
 }
 
-/* Dark theme background */
-.dark body {
-  background: linear-gradient(135deg, #0f172a 0%, #1a1a1a 100%);
-  background-attachment: fixed;
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #4f46e5, #9333ea);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #6366f1, #a855f7);
+}
+
+/* Selection Color */
+::selection {
+  background: rgba(79, 70, 229, 0.3);
+  color: #fff;
+}
+
+/* Custom Focus Ring */
+*:focus {
+  outline: 2px solid rgba(79, 70, 229, 0.5);
+  outline-offset: 2px;
+}
+
+/* Button Hover Effect */
+.btn-hover-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-hover-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    transparent 25%,
+    rgba(255, 255, 255, 0.1) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 50%,
+    transparent 75%,
+    rgba(255, 255, 255, 0.1) 75%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  animation: shine 3s linear infinite;
 }
 
 @keyframes shine {
-  from {
-    background-position: 0% center;
+  0% {
+    transform: translateX(-100%);
   }
-  to {
-    background-position: 200% center;
+  100% {
+    transform: translateX(0%);
   }
 }

@@ -84,7 +84,7 @@ const FAQ = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl font-bold dark:text-white mb-4">
-            <span className="text-gradient">Frequently</span> Asked Questions
+            <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">Frequently</span> Asked Questions
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
             Everything you need to know about DEV Genius

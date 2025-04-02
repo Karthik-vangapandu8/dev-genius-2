@@ -23,7 +23,15 @@ const members = [
     image: "/team/founder3.jpg",
     company: "DEV Genius",
     companyLogo: "/logos/company-logo.svg"
+  },
+  {
+    name: "VECHALAPU JNANA SAI NAIDU",
+    role: "founder & CMO",
+    image: "/team/001.jpeg",
+    company: "DEV Genius",
+    companyLogo: "/logos/company-logo.svg"
   }
+
 ];
 
 const MemberCard = ({ name, role, image, company, companyLogo }: {
@@ -35,33 +43,29 @@ const MemberCard = ({ name, role, image, company, companyLogo }: {
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      viewport={{ once: true }}
-      className="bg-gray-400/30 dark:bg-[#171717]/30 backdrop-blur-xl p-8 rounded-xl border border-gray-800/30"
+      whileHover={{ y: -5 }}
+      className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl"
     >
-      <div className="flex flex-col items-center text-center">
-        <div className="relative w-56 h-52 mb-6">
-          <Image
-            src={image}
-            alt={name}
-            fill
-            className="object-cover rounded-lg"
-          />
-        </div>
-        <h3 className="text-2xl font-bold dark:text-white mb-2">{name}</h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-4">{role}</p>
+      <div className="relative h-48 sm:h-56">
+        <Image
+          src={image}
+          alt={name}
+          fill
+          className="object-cover"
+        />
+      </div>
+      <div className="p-4 sm:p-6">
+        <h3 className="font-semibold text-base sm:text-lg text-gray-900 mb-1">{name}</h3>
+        <p className="text-sm text-gray-600 mb-3">{role}</p>
         <div className="flex items-center space-x-2">
-          <div className="relative w-6 h-6">
-            <Image
-              src={companyLogo}
-              alt={company}
-              fill
-              className="object-contain"
-            />
-          </div>
-          <span className="text-gray-600 dark:text-gray-400">{company}</span>
+          <Image
+            src={companyLogo}
+            alt={company}
+            width={24}
+            height={24}
+            className="rounded-full"
+          />
+          <span className="text-xs sm:text-sm text-gray-500">{company}</span>
         </div>
       </div>
     </motion.div>
@@ -70,30 +74,20 @@ const MemberCard = ({ name, role, image, company, companyLogo }: {
 
 const FoundingMembers = () => {
   return (
-    <div className="relative py-20">
-      <div className="max-w-6xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-24"
-        >
-          <h2 className="text-4xl font-bold dark:text-white mb-4">
-            <span className="text-gradient">Founding</span> Members
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-            Meet the visionaries behind DEV Genius who are passionate about transforming coding education.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {members.map((member) => (
-            <MemberCard key={member.name} {...member} />
-          ))}
-        </div>
+    <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-4">
+        <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+          Meet Our Founding Team
+        </span>
+      </h2>
+      <p className="text-gray-600 text-center text-sm sm:text-base mb-12">The visionaries behind DEV Genius</p>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        {members.map((member, index) => (
+          <MemberCard key={index} {...member} />
+        ))}
       </div>
-    </div>
+    </section>
   );
 };
 

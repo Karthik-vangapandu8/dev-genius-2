@@ -78,7 +78,7 @@ const Languages = () => {
           className="text-center mb-24"
         >
           <h2 className="text-4xl font-bold text-foreground mb-4">
-            <span className="text-gradient">Languages</span> & Frameworks
+            <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">Languages & Frameworks</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Master the most in-demand programming languages and frameworks with our interactive learning platform.

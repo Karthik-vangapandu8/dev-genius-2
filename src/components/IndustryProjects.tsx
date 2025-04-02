@@ -54,7 +54,7 @@ const IndustryProjects = () => {
           className="text-center mb-24"
         >
           <h2 className="text-4xl font-bold dark:text-white mb-4">
-            <span className="text-gradient">Hiring</span> Platform
+            <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">Hiring</span> Platform
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg max-w-3xl mx-auto">
             Bridge the gap between learning and employment. Work on real industry projects, 
@@ -135,7 +135,7 @@ const IndustryProjects = () => {
                         }
                       }
                     }}
-                    className="w-12 h-12 text-white bg-gradient-to-br from-blue-500 to-green-500 dark:from-purple-500 dark:to-pink-500 rounded-lg flex items-center justify-center mb-4"
+                    className="w-12 h-12 text-white bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mb-4"
                   >
                     {feature.icon}
                   </motion.div>
@@ -203,7 +203,7 @@ const IndustryProjects = () => {
               {/* Project 1 */}
               <div className="bg-gray-400/50 dark:bg-[#171717]/30 backdrop-blur-xl p-4 rounded-xl border border-gray-400/30 dark:border-gray-800/30">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                  <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                     <Code2 className="w-4 h-4 text-white" />
                   </span>
                   <h4 className="text-base font-medium dark:text-white">AI-Powered Analytics Dashboard</h4>
@@ -226,7 +226,7 @@ const IndustryProjects = () => {
               {/* Project 2 */}
               <div className="bg-[#171717]/30 backdrop-blur-xl p-4 rounded-xl border border-gray-800/30">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                  <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                     <Building2 className="w-4 h-4 text-white" />
                   </span>
                   <h4 className="text-base font-medium dark:text-white">E-Commerce Platform Optimization</h4>
@@ -249,7 +249,7 @@ const IndustryProjects = () => {
               {/* Project 3 */}
               <div className="bg-[#171717]/30 backdrop-blur-xl p-4 rounded-xl border border-gray-800/30">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                  <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                     <Users className="w-4 h-4 text-white" />
                   </span>
                   <h4 className="text-base font-medium dark:text-white">AI Chat Integration</h4>
@@ -264,7 +264,7 @@ const IndustryProjects = () => {
             {/* View All Projects Button */}
             <Link 
               href="/hiring"
-              className="mt-4 w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-green-500 hover:to-blue-500 dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 group relative z-20"
+              className="mt-4 w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 group relative z-20"
             >
               View All Projects
               <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />

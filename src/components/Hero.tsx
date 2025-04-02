@@ -1,76 +1,204 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { useState } from 'react';
-import IDEPreview from './IDEPreview';
 import ComingSoon from './ComingSoon';
+import IDEPreview from './IDEPreview';
 
 const Hero = () => {
-    const [showComingSoon, setShowComingSoon] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
-    return (
-        <div className="relative z-10">
-            {showComingSoon && <ComingSoon onClose={() => setShowComingSoon(false)} />}
-            {/* Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-                <div className="text-center">
-                    <motion.h1 
-                        className="text-4xl md:text-6xl font-bold mb-6 dark:text-white"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        50 Students. 5 Companies.<br/>1 Game-Changing Opportunity!
-                    </motion.h1>
-                    
-                    <motion.p 
-                        className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 max-w-3xl mx-auto"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                    >
-                        Limited spots for the first batch! Work on real industry projects & get hired without traditional job applications.
-                    </motion.p>
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.35,
+        delayChildren: 0.2
+      }
+    }
+  };
 
-                    <motion.h2
-                        className="text-2xl md:text-4xl font-bold mb-4 dark:text-white mt-12"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                    >
-                        Top Companies Are Hiring Problem-Solvers,<br/>Not Resume Writers!
-                    </motion.h2>
+  const item = {
+    hidden: { opacity: 0, y: 30 },
+    show: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10
+      }
+    }
+  };
 
-                    <motion.p 
-                        className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.6 }}
-                    >
-                        Join DEV GENIUS and prove your skills through real-world challenges—No interviews, just results!
-                    </motion.p>
+  const glowVariants = {
+    initial: { opacity: 0.5, scale: 1 },
+    animate: {
+      opacity: [0.5, 1, 0.5],
+      scale: [1, 1.02, 1],
+      transition: {
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }
+    }
+  };
 
-                    <motion.div 
-                        className="flex justify-center items-center mb-16"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.8 }}
-                    >
-                        <button 
-                            onClick={() => setShowComingSoon(true)}
-                            className="px-8 py-3 bg-gradient-to-r from-blue-500 to-green-500 hover:from-green-500 hover:to-blue-500 dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700 text-white font-semibold rounded-lg transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
-                        >
-                            Try IDE Now
-                        </button>
-                    </motion.div>
+  const textReveal = {
+    hidden: { width: "0%" },
+    show: { 
+      width: "100%",
+      transition: {
+        duration: 1,
+        ease: "easeOut"
+      }
+    }
+  };
 
-                    {/* IDE Preview */}
-                    <IDEPreview />
-                </div>
+  return (
+    <div className="relative z-10 overflow-hidden">
+      {showComingSoon && <ComingSoon onClose={() => setShowComingSoon(false)} />}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+        <motion.div 
+          className="text-center space-y-16 md:space-y-20"
+          variants={container}
+          initial="hidden"
+          animate="show"
+        >
+          {/* Main Heading */}
+          <motion.div variants={item} className="space-y-6">
+            <div className="relative">
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl blur-3xl"
+                variants={glowVariants}
+                initial="initial"
+                animate="animate"
+              />
+              <h1 className="relative font-outfit font-extrabold text-5xl md:text-7xl lg:text-8xl tracking-tight dark:text-white">
+                <motion.div 
+                  className="overflow-hidden"
+                  variants={textReveal}
+                >
+                  <span className="block text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+                    50 Students.
+                  </span>
+                </motion.div>
+                <motion.div 
+                  className="overflow-hidden mt-2"
+                  variants={textReveal}
+                >
+                  <span className="block font-space-grotesk">5 Companies.</span>
+                </motion.div>
+                <motion.div 
+                  className="overflow-hidden mt-2"
+                  variants={textReveal}
+                >
+                  <span className="block text-gradient bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse">
+                    1 Game-Changing Opportunity!
+                  </span>
+                </motion.div>
+              </h1>
             </div>
-        </div>
-    );
+            <motion.p 
+              className="mt-8 text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed font-space-grotesk"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                show: { 
+                  opacity: 1, 
+                  y: 0,
+                  transition: {
+                    duration: 0.8,
+                    ease: "easeOut"
+                  }
+                }
+              }}
+            >
+              <span className="text-gradient font-semibold">Limited spots</span> for the first batch! Work on real industry projects & get hired without traditional job applications.
+            </motion.p>
+          </motion.div>
+
+          {/* Secondary Heading */}
+          <motion.div variants={item} className="space-y-6">
+            <div className="relative">
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-3xl blur-3xl"
+                variants={glowVariants}
+                initial="initial"
+                animate="animate"
+              />
+              <h2 className="relative text-4xl md:text-6xl font-bold dark:text-white leading-tight font-outfit">
+                <span className="block">Top Companies Are Hiring</span>
+                <span className="block text-gradient bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
+                  Problem-Solvers,
+                </span>
+                <span className="block font-space-grotesk">Not Resume Writers!</span>
+              </h2>
+            </div>
+            <motion.p 
+              className="mt-6 text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed font-space-grotesk"
+            >
+              Join{" "}
+              <motion.span
+                className="text-gradient font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+                animate={{
+                  backgroundPosition: ["0%", "100%", "0%"],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                style={{
+                  backgroundSize: "200% 100%"
+                }}
+              >
+                DEV GENIUS
+              </motion.span>{" "}
+              and prove your skills through real-world challenges—
+              <motion.span
+                className="font-semibold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-500"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                No interviews, just results!
+              </motion.span>
+            </motion.p>
+          </motion.div>
+
+          {/* CTA Button */}
+          <motion.div variants={item}>
+            <motion.button
+              onClick={() => setShowComingSoon(true)}
+              className="relative px-10 py-5 text-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 text-white font-semibold rounded-xl transform transition-all duration-200 shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_25px_rgba(79,70,229,0.6)] font-space-grotesk"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="relative z-10">Try IDE Now</span>
+              <motion.div
+                className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 hover:opacity-100 transition-opacity duration-300"
+                style={{ filter: 'blur(8px)' }}
+              />
+            </motion.button>
+          </motion.div>
+
+          {/* IDE Preview */}
+          <motion.div 
+            variants={item}
+            className="relative mt-16"
+          >
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl blur-3xl"
+              variants={glowVariants}
+              initial="initial"
+              animate="animate"
+            />
+            <IDEPreview />
+          </motion.div>
+        </motion.div>
+      </div>
+    </div>
+  );
 };
 
 export default Hero;

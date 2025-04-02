@@ -42,7 +42,7 @@ const Subscription = () => {
         >
           <div className="text-center mb-8">
             <div className="mb-4">
-              <span className="text-gradient text-5xl font-bold">₹1,000</span>
+              <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 text-5xl font-bold">₹1,000</span>
               <span className="text-gray-600 dark:text-gray-400 ml-2">/ lifetime</span>
             </div>
             <p className="text-gray-600 dark:text-gray-400 text-lg">One-time payment, lifetime access</p>
@@ -69,7 +69,7 @@ const Subscription = () => {
             whileTap={{ scale: 0.98 }}
             className="text-center"
           >
-            <button className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-green-500 hover:to-blue-500 dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700 cursor-pointer text-white font-bold py-4 px-8 rounded-xl hover:opacity-90 transition-opacity">
+            <button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 cursor-pointer text-white font-bold py-4 px-8 rounded-xl hover:opacity-90 transition-opacity">
               Get Started Now
             </button>
           </motion.div>
@@ -78,7 +78,7 @@ const Subscription = () => {
             Secure payment • Instant access
           </p>
           
-          <h2 className="text-gradient font-bold text-2xl text-center mt-6">
+          <h2 className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 font-bold text-2xl text-center mt-6">
             Experience risk-free confidence <br /> 100% money-back guarantee if you're not satisfied!
           </h2>
         </motion.div>

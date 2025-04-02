@@ -1,231 +1,359 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { Terminal, Code2, Play, CheckCircle2, AlertCircle, MessageSquare, Braces, GitBranch, Settings } from "lucide-react";
+import Editor from "@monaco-editor/react";
+
+interface AIFeedback {
+  type: 'success' | 'warning' | 'error';
+  message: string;
+  suggestions?: string[];
+  codeSnippet?: string;
+}
 
 const IDEPreview = () => {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="relative group"
-        >
-            {/* Animated border effect */}
-            <div className="absolute -inset-[3px] rounded-lg animate-border blur-[1px]"></div>
-            
-            {/* IDE Window */}
-            <div className="relative rounded-lg bg-white dark:bg-gray-900 shadow-2xl">
-                {/* Window controls */}
-                <div className="flex items-center gap-1.5 p-3 border-b border-gray-200 dark:border-gray-700">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                    <div className="w-3 h-3 rounded-full bg-green-500" />
-                    <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">DevGenius IDE</span>
-                </div>
+  const [currentStep, setCurrentStep] = useState(0);
+  const [showAIFeedback, setShowAIFeedback] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [showTooltip, setShowTooltip] = useState<number | null>(null);
+  const [activeLine, setActiveLine] = useState(1);
+  const [theme, setTheme] = useState<'vs-dark' | 'light'>('vs-dark');
+  const editorRef = useRef(null);
+  const [output, setOutput] = useState<string>('');
+  const [aiFeedback, setAiFeedback] = useState<AIFeedback | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-                {/* Menu Bar */}
-                <div className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center px-2 space-x-4 text-sm">
-                        {['File', 'Edit', 'Selection', 'View', 'Go', 'Run', 'Terminal', 'Help'].map((item) => (
-                            <button
-                                key={item}
-                                className="px-2 py-1.5 text-gray-700 dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 rounded"
-                            >
-                                {item}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="flex h-[600px]">
-                    {/* Activity Bar */}
-                    <div className="w-12 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col items-center py-2 space-y-4">
-                        <button className="p-2 text-purple-600 dark:text-pink-500 bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                            </svg>
-                        </button>
-                        <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-pink-500 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </button>
-                        <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-pink-500 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                            </svg>
-                        </button>
-                        <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-pink-500 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                        </button>
-                        <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-pink-500 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                            </svg>
-                        </button>
-                        <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-pink-500 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="w-64 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
-                        {/* File Explorer Header */}
-                        <div className="px-4 py-2 text-sm text-left font-medium text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
-                            Explorer
-                        </div>
-                        {/* File Tree */}
-                        <div className="p-2 text-sm overflow-y-auto">
-                            <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 mb-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                                </svg>
-                                <span className="font-medium">my-nextjs-app</span>
-                            </div>
-                            <div className="ml-4 space-y-2">
-                                {/* Next.js file structure */}
-                                <FileItem name="src" type="folder" isOpen={true}>
-                                    <FileItem name="app" type="folder" isOpen={true}>
-                                        <FileItem name="page.tsx" type="file" icon="react" />
-                                        <FileItem name="layout.tsx" type="file" icon="react" />
-                                        <FileItem name="globals.css" type="file" icon="css" />
-                                    </FileItem>
-                                    <FileItem name="components" type="folder" isOpen={true}>
-                                        <FileItem name="Navbar.tsx" type="file" icon="react" />
-                                        <FileItem name="Button.tsx" type="file" icon="react" />
-                                        <FileItem name="Card.tsx" type="file" icon="react" />
-                                    </FileItem>
-                                    <FileItem name="lib" type="folder">
-                                        <FileItem name="utils.ts" type="file" icon="typescript" />
-                                        <FileItem name="api.ts" type="file" icon="typescript" />
-                                    </FileItem>
-                                </FileItem>
-                                <FileItem name="public" type="folder">
-                                    <FileItem name="images" type="folder" />
-                                    <FileItem name="fonts" type="folder" />
-                                </FileItem>
-                                <FileItem name="package.json" type="file" icon="npm" />
-                                <FileItem name="tsconfig.json" type="file" icon="typescript" />
-                                <FileItem name="next.config.js" type="file" icon="next" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Main Content */}
-                    <div className="flex-1 flex flex-col">
-                        {/* Tabs */}
-                        <div className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center">
-                            <div className="px-4 py-2 bg-white dark:bg-gray-900 text-sm font-medium text-gray-800 dark:text-gray-200 border-r border-gray-200 dark:border-gray-700 flex items-center space-x-2">
-                                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
-                                </svg>
-                                <span>page.tsx</span>
-                            </div>
-                        </div>
-
-                        {/* Code Content */}
-                        <div className="flex-1 bg-white dark:bg-gray-900 relative group overflow-auto">
-                            {/* Empty state with grid background */}
-                            <div className="absolute inset-0 bg-grid opacity-5"></div>
-                        </div>
-                    </div>
-
-                    {/* AI Panel */}
-                    <div className="w-80 border-l border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 flex flex-col">
-                        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center space-x-2">
-                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                                        </svg>
-                                    </div>
-                                    <div className="text-gray-900 dark:text-gray-100 font-medium">AI</div>
-                                </div>
-                                <button className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="Ask AI anything..."
-                                    className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-pink-500"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                                No conversation yet. Start by asking a question!
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Status Bar */}
-                <div className="bg-gray-100 dark:bg-gray-800 px-4 py-1 flex justify-between items-center text-xs border-t border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center space-x-4 text-gray-600 dark:text-gray-400">
-                        <span>TypeScript React</span>
-                        <span>UTF-8</span>
-                        <span>LF</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <span className="px-2 py-1 rounded-md bg-purple-100 text-purple-600 dark:bg-pink-500/10 dark:text-pink-400">
-                            AI Ready
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </motion.div>
-    );
-};
-
-// Helper component for file tree
-const FileItem = ({ name, type, icon, isOpen, children }: { name: string; type: 'file' | 'folder'; icon?: string; isOpen?: boolean; children?: React.ReactNode }) => {
-    const getIcon = () => {
-        if (type === 'folder') {
-            return (
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                </svg>
-            );
-        }
-        
-        switch (icon) {
-            case 'react':
-                return <span className="text-blue-500">⚛️</span>;
-            case 'typescript':
-                return <span className="text-blue-600">Ts</span>;
-            case 'css':
-                return <span className="text-purple-500">#</span>;
-            case 'npm':
-                return <span className="text-red-500">📦</span>;
-            case 'next':
-                return <span>▲</span>;
-            default:
-                return <span>📄</span>;
-        }
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
     };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-    return (
-        <div>
-            <div className="flex items-center space-x-2 py-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer text-gray-700 dark:text-gray-300">
-                {getIcon()}
-                <span>{name}</span>
-            </div>
-            {isOpen && children && (
-                <div className="ml-4">
-                    {children}
-                </div>
-            )}
+  const codeSteps = [
+    {
+      code: `from flask import Flask
+from typing import Dict
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello() -> Dict[str, str]:
+    """Return a welcome message.
+    
+    Returns:
+        Dict containing welcome message
+    """
+    return {'message': 'Hello, World!'}`,
+      explanation: "Setting up a typed Flask application with docstrings",
+      aiSuggestion: {
+        type: "warning" as const,
+        message: "Good start with type hints! Consider adding error handling.",
+        suggestions: [
+          "Add request validation",
+          "Include error handlers",
+          "Consider adding logging"
+        ]
+      }
+    },
+    {
+      code: `from flask import Flask, jsonify, request
+from typing import Dict, Optional
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+app = Flask(__name__)
+
+@app.errorhandler(400)
+def bad_request(error) -> Dict:
+    """Handle bad request errors.
+    
+    Args:
+        error: The error object
+        
+    Returns:
+        Dict containing error message
+    """
+    return jsonify({'error': str(error)}), 400
+
+@app.route('/api/data', methods=['POST'])
+def process_data() -> Dict:
+    """Process incoming JSON data with validation.
+    
+    Returns:
+        Dict containing processed result
+    """
+    try:
+        data = request.get_json()
+        logger.info(f"Received request with data: {data}")
+        
+        if not isinstance(data.get('value'), (int, float)):
+            raise ValueError("Value must be a number")
+            
+        result = data['value'] * 2
+        return jsonify({'result': result})
+        
+    except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
+        return jsonify({'error': str(e)}), 400`,
+      explanation: "Implementing proper error handling and logging",
+      aiSuggestion: {
+        type: "success" as const,
+        message: "Excellent implementation! Here's what you did well:",
+        suggestions: [
+          "Added comprehensive error handling",
+          "Implemented logging for debugging",
+          "Used type hints consistently",
+          "Added docstrings for documentation"
+        ],
+        codeSnippet: `@app.errorhandler(400)
+def bad_request(error) -> Dict:
+    return jsonify({'error': str(error)}), 400`
+      }
+    }
+  ];
+
+  const features = [
+    { icon: <Terminal className="w-5 h-5" />, label: "Integrated Terminal" },
+    { icon: <Code2 className="w-5 h-5" />, label: "Smart Autocomplete" },
+    { icon: <MessageSquare className="w-5 h-5" />, label: "AI Assistant" },
+    { icon: <Play className="w-5 h-5" />, label: "Live Preview" },
+    { icon: <Braces className="w-5 h-5" />, label: "Code Analysis" },
+    { icon: <GitBranch className="w-5 h-5" />, label: "Version Control" },
+    { icon: <Settings className="w-5 h-5" />, label: "Settings" }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => (prev + 1) % codeSteps.length);
+      setIsTyping(true);
+      setShowAIFeedback(false);
+      setOutput('');
+      
+      // Show AI feedback after typing animation
+      setTimeout(() => {
+        setIsTyping(false);
+        setShowAIFeedback(true);
+        setAiFeedback(codeSteps[currentStep].aiSuggestion);
+        
+        // Simulate output
+        if (currentStep === 1) {
+          setOutput('INFO:root:Server started\nINFO:werkzeug:Running on http://127.0.0.1:5000');
+        }
+      }, 2000);
+      
+      // Animate through lines
+      let line = 1;
+      const lineInterval = setInterval(() => {
+        setActiveLine(line++);
+        if (line > 10) clearInterval(lineInterval);
+      }, 200);
+      
+    }, 8000);
+
+    return () => clearInterval(interval);
+  }, [currentStep]);
+
+  const handleEditorDidMount = (editor: any, monaco: any) => {
+    editorRef.current = editor;
+    
+    // Add custom completions
+    monaco.languages.registerCompletionItemProvider('python', {
+      provideCompletionItems: () => {
+        const suggestions = [
+          {
+            label: '@app.route',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: '@app.route("${1:/}")\ndef ${2:function_name}():\n    return ${3:response}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            documentation: 'Flask route decorator'
+          },
+          {
+            label: 'try-except',
+            kind: monaco.languages.CompletionItemKind.Snippet,
+            insertText: 'try:\n    ${1:pass}\nexcept ${2:Exception} as e:\n    ${3:pass}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            documentation: 'Try-except block'
+          }
+        ];
+        return { suggestions };
+      }
+    });
+  };
+
+  return (
+    <div className="w-full max-w-5xl mx-auto">
+      {/* IDE Header */}
+      <div className="bg-[#1e1e1e] rounded-t-xl p-4 flex flex-col sm:flex-row items-center justify-between border-b border-gray-700 space-y-4 sm:space-y-0">
+        <div className="flex items-center space-x-2">
+          <div className="w-3 h-3 rounded-full bg-red-500" />
+          <div className="w-3 h-3 rounded-full bg-yellow-500" />
+          <div className="w-3 h-3 rounded-full bg-green-500" />
         </div>
-    );
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.label}
+              className="flex items-center space-x-2 text-gray-400 hover:text-white cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              onHoverStart={() => setShowTooltip(index)}
+              onHoverEnd={() => setShowTooltip(null)}
+            >
+              {feature.icon}
+              <AnimatePresence>
+                {showTooltip === index && (
+                  <motion.span
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute mt-8 px-2 py-1 bg-gray-800 text-xs rounded shadow-lg"
+                  >
+                    {feature.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Main IDE Content */}
+      <div className="bg-[#1e1e1e] p-4 sm:p-6 rounded-b-xl grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Code Editor */}
+        <div className="lg:col-span-2 font-mono text-sm">
+          <Editor
+            height={isMobile ? "300px" : "400px"}
+            defaultLanguage="python"
+            theme={theme}
+            value={isTyping ? '' : codeSteps[currentStep].code}
+            options={{
+              minimap: { enabled: false },
+              fontSize: 14,
+              lineNumbers: 'on',
+              roundedSelection: false,
+              scrollBeyondLastLine: false,
+              readOnly: false,
+              automaticLayout: true
+            }}
+            onMount={handleEditorDidMount}
+          />
+          
+          {/* Terminal Output */}
+          {output && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 bg-black rounded-lg p-3 sm:p-4 font-mono text-xs sm:text-sm text-green-400 overflow-x-auto"
+            >
+              <div className="flex items-center mb-2">
+                <Terminal className="w-4 h-4 mr-2" />
+                <span className="text-gray-400">Terminal</span>
+              </div>
+              <pre className="whitespace-pre-wrap">{output}</pre>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Right Panel */}
+        <div className="space-y-6">
+          {/* Explanation */}
+          <motion.div
+            key={`explanation-${currentStep}`}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="bg-gray-800/50 rounded-lg p-4"
+          >
+            <h3 className="text-blue-400 font-semibold mb-2">Step {currentStep + 1}</h3>
+            <p className="text-gray-300 text-sm">{codeSteps[currentStep].explanation}</p>
+          </motion.div>
+
+          {/* AI Feedback */}
+          <AnimatePresence>
+            {showAIFeedback && aiFeedback && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-4"
+              >
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0">
+                    {aiFeedback.type === 'success' ? (
+                      <CheckCircle2 className="w-5 h-5 text-green-400" />
+                    ) : (
+                      <AlertCircle className="w-5 h-5 text-yellow-400" />
+                    )}
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="text-purple-400 font-medium mb-1">AI Feedback</h4>
+                      <p className="text-gray-300 text-sm">{aiFeedback.message}</p>
+                    </div>
+                    
+                    {aiFeedback.suggestions && (
+                      <div className="space-y-2">
+                        <h5 className="text-sm font-medium text-purple-300">Suggestions:</h5>
+                        <ul className="space-y-1">
+                          {aiFeedback.suggestions.map((suggestion, index) => (
+                            <motion.li
+                              key={index}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              className="text-sm text-gray-400 flex items-center space-x-2"
+                            >
+                              <span className="w-1 h-1 bg-purple-400 rounded-full" />
+                              <span>{suggestion}</span>
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {aiFeedback.codeSnippet && (
+                      <div className="mt-2 bg-gray-900/50 rounded p-2">
+                        <code className="text-sm text-gray-300 font-mono">
+                          {aiFeedback.codeSnippet}
+                        </code>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Interactive Elements */}
+          <div className="space-y-2 mt-4 lg:mt-0">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full py-2 px-3 sm:px-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 rounded-lg text-white text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-2"
+            >
+              <Play className="w-4 h-4" />
+              <span>Run Code</span>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full py-2 px-3 sm:px-4 bg-gray-700 hover:bg-gray-600 rounded-lg text-gray-300 text-xs sm:text-sm font-medium transition-all duration-200 flex items-center justify-center space-x-2"
+            >
+              <Code2 className="w-4 h-4" />
+              <span>View Solution</span>
+            </motion.button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default IDEPreview;

@@ -24,16 +24,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSubscription = () => {
-    const subscriptionSection = document.getElementById('subscription');
-    if (subscriptionSection) {
-      subscriptionSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  };
-
   if (!mounted) return null;
 
   return (
@@ -43,10 +33,10 @@ const Navbar = () => {
         {/* Logo Image */}
         <Link href="/">
           <Image
-            src="/logo-removebg-preview.png" // Place your logo inside the "public" folder
+            src="/logo-removebg-preview.png"
             alt="DevGenius Logo"
-            width={50} // Adjust width as needed
-            height={50} // Adjust height as needed
+            width={50}
+            height={50}
             className="cursor-pointer object-cover"
           />
         </Link>
@@ -86,12 +76,12 @@ const Navbar = () => {
           </motion.button>
 
           {/* Get Started Button */}
-          <button
-            onClick={scrollToSubscription}
-            className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-green-500 hover:to-blue-500 dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700 text-white px-4 py-2 rounded-md text-md font-medium transition-all duration-200 transform hover:scale-105"
+          <Link
+            href="/subscribe"
+            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 text-white px-4 py-2 rounded-md text-md font-medium transition-all duration-200 transform hover:scale-105"
           >
             Get Started
-          </button>
+          </Link>
         </div>
       </nav>
     </>

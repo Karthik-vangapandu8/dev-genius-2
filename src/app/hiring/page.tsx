@@ -54,7 +54,7 @@ export default function Hiring() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-gray-600 dark:text-gray-400 text-lg mb-12 max-w-xl mx-auto"
           >
-            We're building a revolutionary hiring platform that connects talented developers 
+            We're building a revolutionary <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">hiring platform</span> that connects talented developers 
             with innovative companies. Be the first to know when we launch.
           </motion.p>
 

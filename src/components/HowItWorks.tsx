@@ -48,74 +48,59 @@ const HowItWorksSection = () => {
   };
 
   return (
-    <div className="relative py-24">
-      <div className="max-w-6xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-32"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="text-gradient">Supercharge</span> Your Learning
+    <section className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+              Supercharge Your Learning
+            </span>
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
             Experience a revolutionary way to master programming with our AI-powered platform
           </p>
-        </motion.div>
+        </div>
 
-        <div className="flex gap-20">
-          {/* Left Sticky Section */}
-          <div className="w-1/3">
-            <div className="sticky top-[100px] p-8 rounded-xl">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                className="flex flex-col items-center text-center rounded-xl"
-              >
-                <h2 className="text-4xl font-bold dark:text-white mb-4">Learn with AI</h2>
-                <p className="text-gray-600 dark:text-gray-400 text-md leading-5 mb-6">
-                  Experience the future of coding education with our AI-powered learning platform. Get real-time feedback and guidance as you code.
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              <div className="flex flex-col h-full">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-500">
+                      {step.icon}
+                    </div>
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+                    {step.title}
+                  </h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base flex-grow">
+                  {step.description}
                 </p>
-                <motion.button 
-                  onClick={scrollToLanguages}
-                  className="px-8 py-3 text-md bg-gradient-to-r from-blue-500 to-green-500 hover:from-green-500 hover:to-blue-500 dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700 text-white rounded-lg transition-all duration-200 shadow-lg"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Start Learning
-                </motion.button>
-              </motion.div>
-            </div>
-          </div>
-
-          {/* Right Section with Steps */}
-          <div className="w-2/3 flex flex-col gap-24">
-            {steps.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                className="flex items-start gap-6"
-              >
-                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-green-500 dark:from-purple-500 dark:to-pink-500 text-white">
-                  {item.icon}
-                </div>
-                <div>
-                  <h3 className="text-2xl font-semibold bg-gradient-to-r from-blue-500 to-green-500 dark:from-purple-500 dark:to-pink-500 bg-clip-text text-transparent">{item.title}</h3>
-                  <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 leading-relaxed">{item.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        <div className="text-center mt-12 sm:mt-16">
+          <motion.button 
+            onClick={scrollToLanguages}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-8 py-3 text-md bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 text-white rounded-lg transition-all duration-200 shadow-lg"
+          >
+            Start Learning
+          </motion.button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
