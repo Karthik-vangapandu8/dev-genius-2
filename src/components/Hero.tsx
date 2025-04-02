@@ -1,12 +1,42 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ComingSoon from './ComingSoon';
 import IDEPreview from './IDEPreview';
 
+interface EnrollmentStatus {
+  remaining: number;
+  total: number;
+  isFull: boolean;
+}
+
 const Hero = () => {
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [enrollmentStatus, setEnrollmentStatus] = useState<EnrollmentStatus>({
+    remaining: 50,
+    total: 50,
+    isFull: false
+  });
+
+  useEffect(() => {
+    // Initial fetch
+    fetchEnrollmentStatus();
+
+    // Set up polling every 30 seconds
+    const interval = setInterval(fetchEnrollmentStatus, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchEnrollmentStatus = async () => {
+    try {
+      const response = await fetch('/api/enrollment');
+      const data = await response.json();
+      setEnrollmentStatus(data);
+    } catch (error) {
+      console.error('Failed to fetch enrollment status:', error);
+    }
+  };
 
   const container = {
     hidden: { opacity: 0 },
@@ -76,28 +106,55 @@ const Hero = () => {
                 animate="animate"
               />
               <h1 className="relative font-outfit font-extrabold text-5xl md:text-7xl lg:text-8xl tracking-tight dark:text-white">
-                <motion.div 
-                  className="overflow-hidden"
-                  variants={textReveal}
-                >
-                  <span className="block text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
-                    50 Students.
-                  </span>
-                </motion.div>
-                <motion.div 
-                  className="overflow-hidden mt-2"
-                  variants={textReveal}
-                >
-                  <span className="block font-space-grotesk">5 Companies.</span>
-                </motion.div>
-                <motion.div 
-                  className="overflow-hidden mt-2"
-                  variants={textReveal}
-                >
-                  <span className="block text-gradient bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse">
-                    1 Game-Changing Opportunity!
-                  </span>
-                </motion.div>
+                {!enrollmentStatus.isFull ? (
+                  <>
+                    <motion.div 
+                      className="overflow-hidden"
+                      variants={textReveal}
+                    >
+                      <motion.span 
+                        className="block text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500"
+                        key={enrollmentStatus.remaining}
+                        initial={{ y: -20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        {enrollmentStatus.remaining} Students.
+                      </motion.span>
+                    </motion.div>
+                    <motion.div 
+                      className="overflow-hidden mt-2"
+                      variants={textReveal}
+                    >
+                      <span className="block font-space-grotesk">5 Companies.</span>
+                    </motion.div>
+                    <motion.div 
+                      className="overflow-hidden mt-2"
+                      variants={textReveal}
+                    >
+                      <span className="block text-gradient bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse">
+                        1 Game-Changing Opportunity!
+                      </span>
+                    </motion.div>
+                  </>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="space-y-4"
+                  >
+                    <span className="block text-gradient bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500">
+                      See You Soon!
+                    </span>
+                    <span className="block text-2xl md:text-4xl text-gray-600 dark:text-gray-300">
+                      First batch is now closed.
+                    </span>
+                    <span className="block text-xl md:text-2xl text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+                      Join the waitlist for next batch!
+                    </span>
+                  </motion.div>
+                )}
               </h1>
             </div>
             <motion.p 

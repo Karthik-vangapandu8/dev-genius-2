@@ -2,84 +2,98 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Check } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
+import { CheckCircle2, Copy, AlertCircle } from 'lucide-react';
 
 const UPIPayment = () => {
   const [copied, setCopied] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success' | 'error'>('pending');
   const upiId = "9948929742@ybl";
-  const upiLink = `upi://pay?pa=${upiId}`;
 
-  const handleCopy = async () => {
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(upiId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handlePaymentSuccess = async () => {
     try {
-      await navigator.clipboard.writeText(upiId);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
+      const response = await fetch('/api/enrollment', {
+        method: 'POST'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update enrollment');
+      }
+
+      setPaymentStatus('success');
+      // Refresh the page after 2 seconds to show updated count
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error('Payment processing error:', error);
+      setPaymentStatus('error');
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 space-y-6">
-      <div className="text-center space-y-2">
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Make Payment
-        </h3>
-        <p className="text-gray-500 dark:text-gray-400">
-          Scan QR code or use UPI ID
-        </p>
-      </div>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full shadow-2xl"
+      >
+        <div className="text-center space-y-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Complete Your Payment</h2>
+          
+          <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">UPI ID:</p>
+            <div className="flex items-center justify-center space-x-2">
+              <code className="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded text-blue-600 dark:text-blue-400">
+                {upiId}
+              </code>
+              <button
+                onClick={copyToClipboard}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                {copied ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <Copy className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
 
-      {/* QR Code */}
-      <div className="flex justify-center p-4 bg-white rounded-lg">
-        <QRCodeSVG 
-          value={upiLink}
-          size={200}
-          level="H"
-          includeMargin={true}
-          className="rounded-lg"
-        />
-      </div>
-
-      {/* UPI ID */}
-      <div className="space-y-2">
-        <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-          UPI ID
-        </p>
-        <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 px-4 py-3 rounded-lg">
-          <span className="text-gray-900 dark:text-white font-medium">
-            {upiId}
-          </span>
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            onClick={handleCopy}
-            className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-full transition-colors"
-          >
-            {copied ? (
-              <Check className="w-5 h-5 text-green-500" />
-            ) : (
-              <Copy className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          <div className="space-y-4">
+            <button
+              onClick={handlePaymentSuccess}
+              className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 text-white rounded-lg font-medium transition-all duration-200"
+            >
+              I've Completed the Payment
+            </button>
+            
+            {paymentStatus === 'success' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center justify-center space-x-2 text-green-500"
+              >
+                <CheckCircle2 className="w-5 h-5" />
+                <span>Payment successful! Redirecting...</span>
+              </motion.div>
             )}
-          </motion.button>
+            
+            {paymentStatus === 'error' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center justify-center space-x-2 text-red-500"
+              >
+                <AlertCircle className="w-5 h-5" />
+                <span>Payment verification failed. Please try again.</span>
+              </motion.div>
+            )}
+          </div>
         </div>
-      </div>
-
-      {/* Instructions */}
-      <div className="space-y-3 text-sm text-gray-500 dark:text-gray-400">
-        <h4 className="font-medium text-gray-900 dark:text-white">Steps to pay:</h4>
-        <ol className="list-decimal list-inside space-y-1">
-          <li>Open your UPI app (GPay, PhonePe, Paytm, etc.)</li>
-          <li>Scan the QR code or enter the UPI ID</li>
-          <li>Enter the amount and complete the payment</li>
-          <li>Keep the transaction ID for reference</li>
-        </ol>
-      </div>
-
-      {/* Support */}
-      <p className="text-xs text-center text-gray-500 dark:text-gray-400">
-        Having trouble? Contact support at support@devgenius.com
-      </p>
+      </motion.div>
     </div>
   );
 };
