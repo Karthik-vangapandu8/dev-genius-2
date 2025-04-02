@@ -3,11 +3,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Copy, AlertCircle } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 const UPIPayment = () => {
   const [copied, setCopied] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<'pending' | 'success' | 'error'>('pending');
   const upiId = "9948929742@ybl";
+  const amount = "1000";
+  const upiLink = `upi://pay?pa=${upiId}&pn=Dev%20Genius&am=${amount}&cu=INR`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(upiId);
@@ -26,7 +29,6 @@ const UPIPayment = () => {
       }
 
       setPaymentStatus('success');
-      // Refresh the page after 2 seconds to show updated count
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -47,7 +49,18 @@ const UPIPayment = () => {
         <div className="text-center space-y-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Complete Your Payment</h2>
           
+          <div className="flex justify-center mb-4">
+            <QRCodeSVG 
+              value={upiLink}
+              size={200}
+              level="H"
+              includeMargin={true}
+              className="rounded-lg bg-white p-2"
+            />
+          </div>
+
           <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Amount: ₹{amount}</p>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">UPI ID:</p>
             <div className="flex items-center justify-center space-x-2">
               <code className="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded text-blue-600 dark:text-blue-400">
