@@ -34,10 +34,11 @@ const Navbar = () => {
         <Link href="/">
           <Image
             src="/logo-removebg-preview.png"
-            alt="DevGenius Logo"
-            width={50}
+            alt="Dev Genius"
+            width={150}
             height={50}
-            className="cursor-pointer object-cover"
+            priority
+            className="w-auto h-8"
           />
         </Link>
 

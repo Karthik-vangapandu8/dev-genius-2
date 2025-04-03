@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
+import { AuthProvider } from '@/context/AuthContext';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -39,11 +40,13 @@ export default function RootLayout({
       </head>
       <body className="bg-white dark:bg-gray-900 antialiased min-h-screen flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <Navbar />
-          <main className="pt-20 flex-grow">
-            {children}
-          </main>
-          <Footer />
+          <AuthProvider>
+            <Navbar />
+            <main className="pt-20 flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

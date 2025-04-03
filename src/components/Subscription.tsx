@@ -2,6 +2,9 @@
 
 import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
+import UPIPayment from './UPIPayment';
 
 const features = [
   "Access to all programming languages",
@@ -15,8 +18,11 @@ const features = [
 ];
 
 const Subscription = () => {
+  const [showPayment, setShowPayment] = useState(false);
+
   return (
     <div id="subscription" className="relative py-24 scroll-mt-24">
+      {showPayment && <UPIPayment onClose={() => setShowPayment(false)} />}
       <div className="max-w-6xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -69,9 +75,15 @@ const Subscription = () => {
             whileTap={{ scale: 0.98 }}
             className="text-center"
           >
-            <button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 cursor-pointer text-white font-bold py-4 px-8 rounded-xl hover:opacity-90 transition-opacity">
+            <button
+              onClick={() => setShowPayment(true)}
+              className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500 rounded-lg transition-all duration-200 transform hover:scale-105"
+            >
               Get Started Now
             </button>
+            <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+              Secure payment powered by UPI
+            </p>
           </motion.div>
 
           <p className="text-gray-600 dark:text-gray-400 text-sm text-center mt-6">

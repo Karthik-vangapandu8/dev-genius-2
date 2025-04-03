@@ -85,6 +85,152 @@
   .mobile-menu.closed {
     @apply translate-x-full;
   }
+
+  /* Hero Background Animation */
+  .hero-background {
+    background-color: transparent;
+    background-image: 
+      radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.2) 2%, transparent 0%),
+      radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.2) 2%, transparent 0%);
+    background-size: 100px 100px;
+    animation: backgroundFloat 20s linear infinite;
+  }
+
+  .dark .hero-background {
+    background-image: 
+      radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.1) 2%, transparent 0%),
+      radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.1) 2%, transparent 0%);
+  }
+
+  @keyframes backgroundFloat {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 100px 100px;
+    }
+  }
+
+  .floating-shapes::before,
+  .floating-shapes::after {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    background: linear-gradient(45deg, #3b82f6 0%, #8b5cf6 100%);
+    animation: morphing 15s ease-in-out infinite;
+    opacity: 0.1;
+    z-index: -1;
+  }
+
+  .floating-shapes::before {
+    top: -300px;
+    left: -300px;
+    animation-delay: -7.5s;
+  }
+
+  .floating-shapes::after {
+    bottom: -300px;
+    right: -300px;
+  }
+
+  @keyframes morphing {
+    0% {
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      transform: rotate(0deg);
+    }
+    50% {
+      border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+      transform: rotate(180deg);
+    }
+    100% {
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      transform: rotate(360deg);
+    }
+  }
+
+  .noise-texture {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  /* Modern Background */
+  .particles-background {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.02));
+  }
+
+  .particles-background::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50h-40v-40h40z' fill='%23000000' fill-opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+  }
+
+  .dark .particles-background {
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.02));
+  }
+
+  .dark .particles-background::before {
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50h-40v-40h40z' fill='%23FFFFFF' fill-opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  .spotlight {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+      rgba(59, 130, 246, 0.08) 0%,
+      rgba(139, 92, 246, 0.08) 25%,
+      transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .spotlight.active {
+    opacity: 1;
+  }
+
+  .code-grid {
+    position: absolute;
+    inset: 0;
+    background-size: 50px 50px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+    -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+  }
+
+  .dark .code-grid {
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .floating {
+    animation: float 6s ease-in-out infinite;
+  }
 }
 
 /* Responsive spacing utilities */
